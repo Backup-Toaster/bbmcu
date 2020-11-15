@@ -86,70 +86,70 @@ void main (void)
 
    while (1)
    {
-      // Wait
-      for (delay_count = 30000; delay_count > 0; delay_count--);
-
-      // Module 0
-      if (duty_direction0 == 1)        // Direction = Increase
-      {
-         // First, check the ECOM0 bit
-         if ((PCA0CPM0 & PCA0CPM0_ECOM__BMASK) == PCA0CPM0_ECOM__DISABLED)
-         {
-            PCA0CPM0 |= PCA0CPM0_ECOM__BMASK; // Set ECOM0 if it is '0'
-         }
-         else                          // Increase duty cycle otherwise
-         {
-            PCA0CPH0--;                // Increase duty cycle
-
-            if (PCA0CPH0 == 0x00)
-            {
-               duty_direction0 = 0;    // Change direction for next time
-            }
-         }
-      }
-      else                             // Direction = Decrease
-      {
-         if (PCA0CPH0 == 0xFF)
-         {
-            PCA0CPM0 &= ~PCA0CPM0_ECOM__BMASK; // Clear ECOM0
-            duty_direction0 = 1;       // Change direction for next time
-         }
-         else
-         {
-            PCA0CPH0++;                // Decrease duty cycle
-         }
-      }
-
-      // Module 1
-      if (duty_direction1 == 1)        // Direction = Decrease
-      {
-         // First, check the ECOM1 bit
-         if ((PCA0CPM1 & PCA0CPM1_ECOM__BMASK) == PCA0CPM1_ECOM__DISABLED)
-         {
-            PCA0CPM1 |= PCA0CPM1_ECOM__BMASK; // Set ECOM1 if it is '0'
-         }
-         else                          // Increase duty cycle otherwise
-         {
-            PCA0CPH1++;                // Decrease duty cycle
-
-            if (PCA0CPH1 == 0xFF)
-            {
-               duty_direction1 = 0;    // Change direction for next time
-            }
-         }
-      }
-      else                             // Direction = Increase
-      {
-         if (PCA0CPH1 == 0x00)
-         {
-            PCA0CPM1 &= ~PCA0CPM1_ECOM__BMASK; // Clear ECOM1
-            duty_direction1 = 1;       // Change direction for next time
-         }
-         else
-         {
-            PCA0CPH1--;                // Decrease duty cycle
-         }
-      }
+//      // Wait
+//      for (delay_count = 30000; delay_count > 0; delay_count--);
+//
+//      // Module 0
+//      if (duty_direction0 == 1)        // Direction = Increase
+//      {
+//         // First, check the ECOM0 bit
+//         if ((PCA0CPM0 & PCA0CPM0_ECOM__BMASK) == PCA0CPM0_ECOM__DISABLED)
+//         {
+//            PCA0CPM0 |= PCA0CPM0_ECOM__BMASK; // Set ECOM0 if it is '0'
+//         }
+//         else                          // Increase duty cycle otherwise
+//         {
+//            PCA0CPH0--;                // Increase duty cycle
+//
+//            if (PCA0CPH0 == 0x00)
+//            {
+//               duty_direction0 = 0;    // Change direction for next time
+//            }
+//         }
+//      }
+//      else                             // Direction = Decrease
+//      {
+//         if (PCA0CPH0 == 0xFF)
+//         {
+//            PCA0CPM0 &= ~PCA0CPM0_ECOM__BMASK; // Clear ECOM0
+//            duty_direction0 = 1;       // Change direction for next time
+//         }
+//         else
+//         {
+//            PCA0CPH0++;                // Decrease duty cycle
+//         }
+//      }
+//
+//      // Module 1
+//      if (duty_direction1 == 1)        // Direction = Decrease
+//      {
+//         // First, check the ECOM1 bit
+//         if ((PCA0CPM1 & PCA0CPM1_ECOM__BMASK) == PCA0CPM1_ECOM__DISABLED)
+//         {
+//            PCA0CPM1 |= PCA0CPM1_ECOM__BMASK; // Set ECOM1 if it is '0'
+//         }
+//         else                          // Increase duty cycle otherwise
+//         {
+//            PCA0CPH1++;                // Decrease duty cycle
+//
+//            if (PCA0CPH1 == 0xFF)
+//            {
+//               duty_direction1 = 0;    // Change direction for next time
+//            }
+//         }
+//      }
+//      else                             // Direction = Increase
+//      {
+//         if (PCA0CPH1 == 0x00)
+//         {
+//            PCA0CPM1 &= ~PCA0CPM1_ECOM__BMASK; // Clear ECOM1
+//            duty_direction1 = 1;       // Change direction for next time
+//         }
+//         else
+//         {
+//            PCA0CPH1--;                // Decrease duty cycle
+//         }
+//      }
    }
 }
 
