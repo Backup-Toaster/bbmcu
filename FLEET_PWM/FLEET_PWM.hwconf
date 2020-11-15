@@ -35,6 +35,8 @@
     <property object="P1.5" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P1.5" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P1.6" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P2.0" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P2.1" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P3.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P3.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="PBCFG_0" propertyId="pbcfg.settings.enablecrossbar" value="Enabled"/>

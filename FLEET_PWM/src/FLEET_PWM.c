@@ -52,11 +52,20 @@
 #include "InitDevice.h"
 
 //-----------------------------------------------------------------------------
-// Pin Definitions
+// Global Variables
 //-----------------------------------------------------------------------------
-SI_SBIT (DISP_EN, SFR_P3, 4);          // Display Enable
-#define DISP_BC_DRIVEN   0             // 0 = Board Controller drives display
-#define DISP_EFM8_DRIVEN 1             // 1 = EFM8 drives display
+uint8_t i2cReceivedData;               // Global holder for I2C data.
+                                       // All receive data is written
+                                       // here;
+
+bool dataReady = 0;                    // Set to '1' by the I2C ISR
+                                       // when a new data byte has been
+                                       // received.
+
+bool txDataReady = 1;                  // Set to '1' indicate that Tx data ready.
+uint8_t sendDataValue = 0;             // Transmit the data value 0-255 repeatedly.
+uint8_t sendDataCnt = 0;               // Transmit data counter. Count the Tx data
+                                       // in a I2C transaction.
 
 //-----------------------------------------------------------------------------
 // SiLabs_Startup() Routine
@@ -81,8 +90,6 @@ void main (void)
    bool duty_direction1 = 0;            // Module 1: 0 = Increase; 1 = Decrease
 
    enter_DefaultMode_from_RESET();
-
-   DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
 
    while (1)
    {
