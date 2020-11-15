@@ -84,45 +84,6 @@ WDT_0_enter_DefaultMode_from_RESET (void)
 }
 
 //================================================================================
-// PORTS_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void
-PORTS_0_enter_DefaultMode_from_RESET (void)
-{
-  // $[P0 - Port 0 Pin Latch]
-  // [P0 - Port 0 Pin Latch]$
-
-  // $[P0MDOUT - Port 0 Output Mode]
-  // [P0MDOUT - Port 0 Output Mode]$
-
-  // $[P0MDIN - Port 0 Input Mode]
-  // [P0MDIN - Port 0 Input Mode]$
-
-  // $[P0SKIP - Port 0 Skip]
-  /***********************************************************************
-   - P0.0 pin is skipped by the crossbar
-   - P0.1 pin is skipped by the crossbar
-   - P0.2 pin is skipped by the crossbar
-   - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is skipped by the crossbar
-   - P0.5 pin is skipped by the crossbar
-   - P0.6 pin is skipped by the crossbar
-   - P0.7 pin is skipped by the crossbar
-   ***********************************************************************/
-  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__SKIPPED | P0SKIP_B2__SKIPPED
-      | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED | P0SKIP_B5__SKIPPED
-      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
-  // [P0SKIP - Port 0 Skip]$
-
-  // $[P0MASK - Port 0 Mask]
-  // [P0MASK - Port 0 Mask]$
-
-  // $[P0MAT - Port 0 Match]
-  // [P0MAT - Port 0 Match]$
-
-}
-
-//================================================================================
 // PORTS_1_enter_DefaultMode_from_RESET
 //================================================================================
 extern void
@@ -175,30 +136,37 @@ PORTS_1_enter_DefaultMode_from_RESET (void)
 }
 
 //================================================================================
-// PORTS_3_enter_DefaultMode_from_RESET
+// PORTS_2_enter_DefaultMode_from_RESET
 //================================================================================
 extern void
-PORTS_3_enter_DefaultMode_from_RESET (void)
+PORTS_2_enter_DefaultMode_from_RESET (void)
 {
-  // $[P3 - Port 3 Pin Latch]
-  // [P3 - Port 3 Pin Latch]$
+  // $[P2 - Port 2 Pin Latch]
+  // [P2 - Port 2 Pin Latch]$
 
-  // $[P3MDOUT - Port 3 Output Mode]
+  // $[P2MDOUT - Port 2 Output Mode]
+  // [P2MDOUT - Port 2 Output Mode]$
+
+  // $[P2MDIN - Port 2 Input Mode]
+  // [P2MDIN - Port 2 Input Mode]$
+
+  // $[P2SKIP - Port 2 Skip]
   /***********************************************************************
-   - P3.0 output is open-drain
-   - P3.1 output is open-drain
-   - P3.2 output is open-drain
-   - P3.3 output is open-drain
-   - P3.4 output is push-pull
-   - P3.7 output is open-drain
+   - P2.0 pin is skipped by the crossbar
+   - P2.1 pin is skipped by the crossbar
+   - P2.2 pin is not skipped by the crossbar
+   - P2.3 pin is not skipped by the crossbar
    ***********************************************************************/
-  P3MDOUT = P3MDOUT_B0__OPEN_DRAIN | P3MDOUT_B1__OPEN_DRAIN
-      | P3MDOUT_B2__OPEN_DRAIN | P3MDOUT_B3__OPEN_DRAIN | P3MDOUT_B4__PUSH_PULL
-      | P3MDOUT_B7__OPEN_DRAIN;
-  // [P3MDOUT - Port 3 Output Mode]$
+  SFRPAGE = 0x20;
+  P2SKIP = P2SKIP_B0__SKIPPED | P2SKIP_B1__SKIPPED | P2SKIP_B2__NOT_SKIPPED
+      | P2SKIP_B3__NOT_SKIPPED;
+  // [P2SKIP - Port 2 Skip]$
 
-  // $[P3MDIN - Port 3 Input Mode]
-  // [P3MDIN - Port 3 Input Mode]$
+  // $[P2MASK - Port 2 Mask]
+  // [P2MASK - Port 2 Mask]$
+
+  // $[P2MAT - Port 2 Match]
+  // [P2MAT - Port 2 Match]$
 
 }
 
@@ -264,11 +232,232 @@ CLOCK_0_enter_DefaultMode_from_RESET (void)
 }
 
 //================================================================================
-// PCA_0_enter_DefaultMode_from_RESET
+// TIMER16_4_enter_DefaultMode_from_RESET
 //================================================================================
+extern void
+TIMER16_4_enter_DefaultMode_from_RESET (void)
+{
+  // $[Timer Initialization]
+  // Save Timer Configuration
+  uint8_t TMR4CN0_TR4_save;
+  SFRPAGE = 0x10;
+  TMR4CN0_TR4_save = TMR4CN0 & TMR4CN0_TR4__BMASK;
+  // Stop Timer
+  TMR4CN0 &= ~(TMR4CN0_TR4__BMASK);
+  // [Timer Initialization]$
+
+  // $[TMR4CN1 - Timer 4 Control 1]
+  // [TMR4CN1 - Timer 4 Control 1]$
+
+  // $[TMR4CN0 - Timer 4 Control]
+  // [TMR4CN0 - Timer 4 Control]$
+
+  // $[TMR4H - Timer 4 High Byte]
+  // [TMR4H - Timer 4 High Byte]$
+
+  // $[TMR4L - Timer 4 Low Byte]
+  // [TMR4L - Timer 4 Low Byte]$
+
+  // $[TMR4RLH - Timer 4 Reload High Byte]
+  /***********************************************************************
+   - Timer 4 Reload High Byte = 0x38
+   ***********************************************************************/
+  TMR4RLH = (0x38 << TMR4RLH_TMR4RLH__SHIFT);
+  // [TMR4RLH - Timer 4 Reload High Byte]$
+
+  // $[TMR4RLL - Timer 4 Reload Low Byte]
+  /***********************************************************************
+   - Timer 4 Reload Low Byte = 0x9E
+   ***********************************************************************/
+  TMR4RLL = (0x9E << TMR4RLL_TMR4RLL__SHIFT);
+  // [TMR4RLL - Timer 4 Reload Low Byte]$
+
+  // $[TMR4CN0]
+  /***********************************************************************
+   - Start Timer 4 running
+   ***********************************************************************/
+  TMR4CN0 |= TMR4CN0_TR4__RUN;
+  // [TMR4CN0]$
+
+  // $[Timer Restoration]
+  // Restore Timer Configuration
+  TMR4CN0 |= TMR4CN0_TR4_save;
+  // [Timer Restoration]$
+
+}
+
+//================================================================================
+// I2CSLAVE_0_enter_DefaultMode_from_RESET
+//================================================================================
+extern void
+I2CSLAVE_0_enter_DefaultMode_from_RESET (void)
+{
+  // $[I2C0FCN0 - I2C0 FIFO Control 0]
+  // [I2C0FCN0 - I2C0 FIFO Control 0]$
+  SFRPAGE = 0x20;
+  I2C0FCN0 &= ~I2C0FCN0_RXTH__FMASK;
+  I2C0FCN0 |= I2C0FCN0_RXTH__ZERO | I2C0FCN0_RFRQE__ENABLED;
+  I2C0FCN0 &= ~I2C0FCN0_TXTH__FMASK;
+  I2C0FCN0 |= I2C0FCN0_TXTH__ONE | I2C0FCN0_TFRQE__ENABLED;
+
+  // $[I2C0SLAD - I2C0 Slave Address]
+  /***********************************************************************
+   - I2C Hardware Slave Address = 0x78
+   ***********************************************************************/
+  SFRPAGE = 0x20;
+  I2C0SLAD = (0x78 << I2C0SLAD_I2C0SLAD__SHIFT);
+  // [I2C0SLAD - I2C0 Slave Address]$
+
+  // $[I2C0CN0 - I2C0 Control]
+  /***********************************************************************
+   - Set the I2C0 Slave pins in I2C mode
+   - Data bytes must be written into the TX FIFO via the I2C0DOUT register
+   before the 8th SCL clock of the matching slave address byte transfer
+   arrives for an I2C read operation
+   - Enable I2C SCL low timeout detection using Timer 4 if Timer 4 RLFSEL
+   is set appropriately
+   ***********************************************************************/
+  I2C0CN0 &= ~I2C0CN0_PRELOAD__BMASK;
+  I2C0CN0 |= I2C0CN0_PINMD__I2C_MODE | I2C0CN0_TIMEOUT__ENABLED;
+  // [I2C0CN0 - I2C0 Control]$
+
+  //I2C0FCN0 |= I2C0FCN0_RFRQE__ENABLED;  // Enable RX FIFO request (threshold request) interrupt
+
+  // $[I2C0ADM - I2C0 Slave Address Mask]
+  // [I2C0ADM - I2C0 Slave Address Mask]$
+  I2C0ADM &= ~I2C0ADM_FACS__BMASK;
+
+  // $[I2C0CN0 - I2C0 Control 2]
+  /***********************************************************************
+   - Enable the I2C0 Slave module
+   ***********************************************************************/
+  I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;
+  // [I2C0CN0 - I2C0 Control 2]$
+
+}
+
+//================================================================================
+// INTERRUPT_0_enter_DefaultMode_from_RESET
+//================================================================================
+extern void
+INTERRUPT_0_enter_DefaultMode_from_RESET (void)
+{
+  // $[EIE1 - Extended Interrupt Enable 1]
+  // [EIE1 - Extended Interrupt Enable 1]$
+
+  // $[EIE2 - Extended Interrupt Enable 2]
+  /***********************************************************************
+   - Disable CL0 interrupts
+   - Enable interrupt requests generated by the I2C0 slave
+   - Enable interrupt requests generated by the TF4L or TF4H flags
+   - Disable Timer 5 interrupts
+   - Disable UART1 interrupts
+   ***********************************************************************/
+  SFRPAGE = 0x00;
+  EIE2 = EIE2_CL0__DISABLED | EIE2_EI2C0__ENABLED | EIE2_ET4__ENABLED
+      | EIE2_ET5__DISABLED | EIE2_ES1__DISABLED;
+  // [EIE2 - Extended Interrupt Enable 2]$
+
+  // $[EIP1H - Extended Interrupt Priority 1 High]
+  // [EIP1H - Extended Interrupt Priority 1 High]$
+
+  // $[EIP1 - Extended Interrupt Priority 1 Low]
+  // [EIP1 - Extended Interrupt Priority 1 Low]$
+
+  // $[EIP2 - Extended Interrupt Priority 2]
+  // [EIP2 - Extended Interrupt Priority 2]$
+
+  // $[EIP2H - Extended Interrupt Priority 2 High]
+  // [EIP2H - Extended Interrupt Priority 2 High]$
+
+  // $[IE - Interrupt Enable]
+  /***********************************************************************
+   - Enable each interrupt according to its individual mask setting
+   - Disable external interrupt 0
+   - Disable external interrupt 1
+   - Disable all SPI0 interrupts
+   - Disable all Timer 0 interrupt
+   - Disable all Timer 1 interrupt
+   - Disable Timer 2 interrupt
+   - Disable UART0 interrupt
+   ***********************************************************************/
+  IE = IE_EA__ENABLED | IE_EX0__DISABLED | IE_EX1__DISABLED | IE_ESPI0__DISABLED
+      | IE_ET0__DISABLED | IE_ET1__DISABLED | IE_ET2__DISABLED
+      | IE_ES0__DISABLED;
+  // [IE - Interrupt Enable]$
+
+  // $[IP - Interrupt Priority]
+  // [IP - Interrupt Priority]$
+
+  // $[IPH - Interrupt Priority High]
+  // [IPH - Interrupt Priority High]$
+
+}
+extern void
+PORTS_0_enter_DefaultMode_from_RESET (void)
+{
+  // $[P0 - Port 0 Pin Latch]
+  // [P0 - Port 0 Pin Latch]$
+
+  // $[P0MDOUT - Port 0 Output Mode]
+  // [P0MDOUT - Port 0 Output Mode]$
+
+  // $[P0MDIN - Port 0 Input Mode]
+  // [P0MDIN - Port 0 Input Mode]$
+
+  // $[P0SKIP - Port 0 Skip]
+  /***********************************************************************
+   - P0.0 pin is skipped by the crossbar
+   - P0.1 pin is skipped by the crossbar
+   - P0.2 pin is skipped by the crossbar
+   - P0.3 pin is skipped by the crossbar
+   - P0.4 pin is skipped by the crossbar
+   - P0.5 pin is skipped by the crossbar
+   - P0.6 pin is skipped by the crossbar
+   - P0.7 pin is skipped by the crossbar
+   ***********************************************************************/
+  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__SKIPPED | P0SKIP_B2__SKIPPED
+      | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED | P0SKIP_B5__SKIPPED
+      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
+  // [P0SKIP - Port 0 Skip]$
+
+  // $[P0MASK - Port 0 Mask]
+  // [P0MASK - Port 0 Mask]$
+
+  // $[P0MAT - Port 0 Match]
+  // [P0MAT - Port 0 Match]$
+
+}
+
+extern void
+PORTS_3_enter_DefaultMode_from_RESET (void)
+{
+  // $[P3 - Port 3 Pin Latch]
+  // [P3 - Port 3 Pin Latch]$
+
+  // $[P3MDOUT - Port 3 Output Mode]
+  /***********************************************************************
+   - P3.0 output is open-drain
+   - P3.1 output is open-drain
+   - P3.2 output is open-drain
+   - P3.3 output is open-drain
+   - P3.4 output is push-pull
+   - P3.7 output is open-drain
+   ***********************************************************************/
+  P3MDOUT = P3MDOUT_B0__OPEN_DRAIN | P3MDOUT_B1__OPEN_DRAIN
+      | P3MDOUT_B2__OPEN_DRAIN | P3MDOUT_B3__OPEN_DRAIN | P3MDOUT_B4__PUSH_PULL
+      | P3MDOUT_B7__OPEN_DRAIN;
+  // [P3MDOUT - Port 3 Output Mode]$
+
+  // $[P3MDIN - Port 3 Input Mode]
+  // [P3MDIN - Port 3 Input Mode]$
+
+}
+
 extern void
 PCA_0_enter_DefaultMode_from_RESET (void)
 {
+  SFRPAGE = 0x00;
   // $[PCA Off]
   PCA0CN0_CR = PCA0CN0_CR__STOP;
   // [PCA Off]$
@@ -319,9 +508,6 @@ PCA_0_enter_DefaultMode_from_RESET (void)
 
 }
 
-//================================================================================
-// PCACH_0_enter_DefaultMode_from_RESET
-//================================================================================
 extern void
 PCACH_0_enter_DefaultMode_from_RESET (void)
 {
@@ -368,9 +554,6 @@ PCACH_0_enter_DefaultMode_from_RESET (void)
 
 }
 
-//================================================================================
-// PCACH_1_enter_DefaultMode_from_RESET
-//================================================================================
 extern void
 PCACH_1_enter_DefaultMode_from_RESET (void)
 {
@@ -460,184 +643,6 @@ PCACH_2_enter_DefaultMode_from_RESET (void)
 
   // $[PCA0 Settings Restore]
   // [PCA0 Settings Restore]$
-
-}
-
-extern void
-TIMER16_4_enter_DefaultMode_from_RESET (void)
-{
-  // $[Timer Initialization]
-  // Save Timer Configuration
-  uint8_t TMR4CN0_TR4_save;
-  SFRPAGE = 0x10;
-  TMR4CN0_TR4_save = TMR4CN0 & TMR4CN0_TR4__BMASK;
-  // Stop Timer
-  TMR4CN0 &= ~(TMR4CN0_TR4__BMASK);
-  // [Timer Initialization]$
-
-  // $[TMR4CN1 - Timer 4 Control 1]
-  // [TMR4CN1 - Timer 4 Control 1]$
-
-  // $[TMR4CN0 - Timer 4 Control]
-  // [TMR4CN0 - Timer 4 Control]$
-
-  // $[TMR4H - Timer 4 High Byte]
-  // [TMR4H - Timer 4 High Byte]$
-
-  // $[TMR4L - Timer 4 Low Byte]
-  // [TMR4L - Timer 4 Low Byte]$
-
-  // $[TMR4RLH - Timer 4 Reload High Byte]
-  /***********************************************************************
-   - Timer 4 Reload High Byte = 0x38
-   ***********************************************************************/
-  TMR4RLH = (0x38 << TMR4RLH_TMR4RLH__SHIFT);
-  // [TMR4RLH - Timer 4 Reload High Byte]$
-
-  // $[TMR4RLL - Timer 4 Reload Low Byte]
-  /***********************************************************************
-   - Timer 4 Reload Low Byte = 0x9E
-   ***********************************************************************/
-  TMR4RLL = (0x9E << TMR4RLL_TMR4RLL__SHIFT);
-  // [TMR4RLL - Timer 4 Reload Low Byte]$
-
-  // $[TMR4CN0]
-  /***********************************************************************
-   - Start Timer 4 running
-   ***********************************************************************/
-  TMR4CN0 |= TMR4CN0_TR4__RUN;
-  // [TMR4CN0]$
-
-  // $[Timer Restoration]
-  // Restore Timer Configuration
-  TMR4CN0 |= TMR4CN0_TR4_save;
-  // [Timer Restoration]$
-
-}
-
-extern void
-I2CSLAVE_0_enter_DefaultMode_from_RESET (void)
-{
-  // $[I2C0FCN0 - I2C0 FIFO Control 0]
-  // [I2C0FCN0 - I2C0 FIFO Control 0]$
-
-  // $[I2C0SLAD - I2C0 Slave Address]
-  /***********************************************************************
-   - I2C Hardware Slave Address = 0x78
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  I2C0SLAD = (0x78 << I2C0SLAD_I2C0SLAD__SHIFT);
-  // [I2C0SLAD - I2C0 Slave Address]$
-
-  // $[I2C0ADM - I2C0 Slave Address Mask]
-  // [I2C0ADM - I2C0 Slave Address Mask]$
-
-  // $[I2C0CN0 - I2C0 Control]
-  /***********************************************************************
-   - Set the I2C0 Slave pins in I2C mode
-   - Data bytes must be written into the TX FIFO via the I2C0DOUT register
-   before the 8th SCL clock of the matching slave address byte transfer
-   arrives for an I2C read operation
-   - Enable I2C SCL low timeout detection using Timer 4 if Timer 4 RLFSEL
-   is set appropriately
-   ***********************************************************************/
-  I2C0CN0 &= ~I2C0CN0_PRELOAD__BMASK;
-  I2C0CN0 |= I2C0CN0_PINMD__I2C_MODE | I2C0CN0_TIMEOUT__ENABLED;
-  // [I2C0CN0 - I2C0 Control]$
-
-  // $[I2C0CN0 - I2C0 Control 2]
-  /***********************************************************************
-   - Enable the I2C0 Slave module
-   ***********************************************************************/
-  I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;
-  // [I2C0CN0 - I2C0 Control 2]$
-
-}
-
-extern void
-INTERRUPT_0_enter_DefaultMode_from_RESET (void)
-{
-  // $[EIE1 - Extended Interrupt Enable 1]
-  // [EIE1 - Extended Interrupt Enable 1]$
-
-  // $[EIE2 - Extended Interrupt Enable 2]
-  /***********************************************************************
-   - Disable CL0 interrupts
-   - Enable interrupt requests generated by the I2C0 slave
-   - Enable interrupt requests generated by the TF4L or TF4H flags
-   - Disable Timer 5 interrupts
-   - Disable UART1 interrupts
-   ***********************************************************************/
-  SFRPAGE = 0x00;
-  EIE2 = EIE2_CL0__DISABLED | EIE2_EI2C0__ENABLED | EIE2_ET4__ENABLED
-      | EIE2_ET5__DISABLED | EIE2_ES1__DISABLED;
-  // [EIE2 - Extended Interrupt Enable 2]$
-
-  // $[EIP1H - Extended Interrupt Priority 1 High]
-  // [EIP1H - Extended Interrupt Priority 1 High]$
-
-  // $[EIP1 - Extended Interrupt Priority 1 Low]
-  // [EIP1 - Extended Interrupt Priority 1 Low]$
-
-  // $[EIP2 - Extended Interrupt Priority 2]
-  // [EIP2 - Extended Interrupt Priority 2]$
-
-  // $[EIP2H - Extended Interrupt Priority 2 High]
-  // [EIP2H - Extended Interrupt Priority 2 High]$
-
-  // $[IE - Interrupt Enable]
-  /***********************************************************************
-   - Enable each interrupt according to its individual mask setting
-   - Disable external interrupt 0
-   - Disable external interrupt 1
-   - Disable all SPI0 interrupts
-   - Disable all Timer 0 interrupt
-   - Disable all Timer 1 interrupt
-   - Disable Timer 2 interrupt
-   - Disable UART0 interrupt
-   ***********************************************************************/
-  IE = IE_EA__ENABLED | IE_EX0__DISABLED | IE_EX1__DISABLED | IE_ESPI0__DISABLED
-      | IE_ET0__DISABLED | IE_ET1__DISABLED | IE_ET2__DISABLED
-      | IE_ES0__DISABLED;
-  // [IE - Interrupt Enable]$
-
-  // $[IP - Interrupt Priority]
-  // [IP - Interrupt Priority]$
-
-  // $[IPH - Interrupt Priority High]
-  // [IPH - Interrupt Priority High]$
-
-}
-
-extern void
-PORTS_2_enter_DefaultMode_from_RESET (void)
-{
-  // $[P2 - Port 2 Pin Latch]
-  // [P2 - Port 2 Pin Latch]$
-
-  // $[P2MDOUT - Port 2 Output Mode]
-  // [P2MDOUT - Port 2 Output Mode]$
-
-  // $[P2MDIN - Port 2 Input Mode]
-  // [P2MDIN - Port 2 Input Mode]$
-
-  // $[P2SKIP - Port 2 Skip]
-  /***********************************************************************
-   - P2.0 pin is skipped by the crossbar
-   - P2.1 pin is skipped by the crossbar
-   - P2.2 pin is not skipped by the crossbar
-   - P2.3 pin is not skipped by the crossbar
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  P2SKIP = P2SKIP_B0__SKIPPED | P2SKIP_B1__SKIPPED | P2SKIP_B2__NOT_SKIPPED
-      | P2SKIP_B3__NOT_SKIPPED;
-  // [P2SKIP - Port 2 Skip]$
-
-  // $[P2MASK - Port 2 Mask]
-  // [P2MASK - Port 2 Mask]$
-
-  // $[P2MAT - Port 2 Match]
-  // [P2MAT - Port 2 Match]$
 
 }
 

@@ -1,0 +1,161 @@
+C51 COMPILER V9.60.0.0   EFM8BB3_I2C_SLAVE                                                 11/15/2020 15:24:06 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EFM8BB3_I2C_SLAVE
+OBJECT MODULE PLACED IN .\src\EFM8BB3_I2C_Slave.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v5\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\Lawrenc
+                    -e\SimplicityStudio\v5_workspace\EFM8BB3_I2C_Slave_FIFO\src\EFM8BB3_I2C_Slave.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) 
+                    -WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(C:\Users\Lawrence\SimplicityStudio\v
+                    -5_workspace\EFM8BB3_I2C_Slave_FIFO\inc;C:/SiliconLabs/SimplicityStudio/v5/developer/sdks/8051/v4.1.7//Device/shared/si80
+                    -51Base;C:/SiliconLabs/SimplicityStudio/v5/developer/sdks/8051/v4.1.7//Device/EFM8BB3/inc) PRINT(.\src\EFM8BB3_I2C_Slave.
+                    -lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\EFM8BB3_I2C_Slave.OBJ)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // EFM8BB3_I2C_Slave.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright 2017 Silicon Laboratories, Inc.
+   5          // http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+   6          //
+   7          // Program Description:
+   8          //
+   9          // Example software to demonstrate the I2C Slave interface.
+  10          // - Interrupt-driven I2C Slave implementation
+  11          // - Only slave states defined
+  12          // - Received data will be stored in the i2cReceivedData
+  13          // - Transmit the data value 0-255 repeatedly
+  14          // - Timer4 used by I2C Slave for SCL low timeout detection
+  15          // - ARBLOST support included
+  16          //
+  17          // Resources:
+  18          //   SYSCLK - 24.5 MHz HFOSC0 / 1
+  19          //   I2C Slave
+  20          //   Timer4 - I2C SCL low timeout detection
+  21          //   On (QFN32, QFP32) parts(QFN32 part is used on STK):
+  22          //     P2.0   - I2C SDA
+  23          //     P2.1   - I2C SCL
+  24          //   On (QFN24, QSOP24) parts:
+  25          //     P1.3   - I2C SDA
+  26          //     P1.4   - I2C SCL
+  27          //   P1.4   - LED green
+  28          //   P2.3   - Display enable
+  29          //
+  30          //-----------------------------------------------------------------------------
+  31          // How To Test: EFM8BB3 STK (I2C Slave) + Board running SMBus Master
+  32          //   (for example, EFM8BB3 STK or a C8051Fxxx DK board)
+  33          //-----------------------------------------------------------------------------
+  34          // 1) Connect the EFM8BB3 STK to the board running the corresponding
+  35          //    SMBus_Master code.
+  36          // 2) Place the switch in "AEM" mode.
+  37          // 3) Connect the EFM8BB3 STK board to a PC using a mini USB cable.
+  38          // 4) Compile and download code to the EFM8BB3 STK board.
+  39          //    In Simplicity Studio IDE, select Run -> Debug from the menu bar,
+  40          //    click the Debug button in the quick menu, or press F11.
+  41          // 5) Run the code.
+  42          //    In Simplicity Studio IDE, select Run -> Resume from the menu bar,
+  43          //    click the Resume button in the quick menu, or press F8.
+  44          // 6) This example works with FIFO request interrupt(FIFO threshold) enabled mode.
+  45          // 7) Firmware fill the TX FIFO on each Transmit FIFO Request (TFRQ) interrupt
+  46          //    until the TX FIFO full, clock stretching won't be caused by RD interrupt.
+  47          // 8) Firmware read one or more bytes of data from the RX FIFO on each Receive
+  48          //    FIFO Request (RFRQ) interrupt, clock stretching won't be caused by WR interrupt.
+  49          // Target:         EFM8BB3
+  50          // Tool chain:     Generic
+  51          //
+C51 COMPILER V9.60.0.0   EFM8BB3_I2C_SLAVE                                                 11/15/2020 15:24:06 PAGE 2   
+
+  52          // Release 0.1 (CY)
+  53          //    - Initial Revision
+  54          //    - 19 June 2017
+  55          //
+  56          
+  57          //-----------------------------------------------------------------------------
+  58          // Includes
+  59          //-----------------------------------------------------------------------------
+  60          #include <SI_EFM8BB3_Register_Enums.h>                  // SFR declarations
+  61          #include "InitDevice.h"
+  62          #include "EFM8BB3_I2C_Slave.h"
+  63          // $[Generated Includes]
+  64          // [Generated Includes]$
+  65          //-----------------------------------------------------------------------------
+  66          // Global Variables
+  67          //-----------------------------------------------------------------------------
+  68          uint8_t i2cReceivedData;               // Global holder for I2C data.
+  69                                                 // All receive data is written
+  70                                                 // here;
+  71          
+  72          bool dataReady = 0;                    // Set to '1' by the I2C ISR
+  73                                                 // when a new data byte has been
+  74                                                 // received.
+  75          
+  76          bool txDataReady = 1;                  // Set to '1' indicate that Tx data ready.
+  77          uint8_t sendDataValue = 0;             // Transmit the data value 0-255 repeatedly.
+  78          uint8_t sendDataCnt = 0;               // Transmit data counter. Count the Tx data
+  79                                                 // in a I2C transaction.
+  80          
+  81          //-----------------------------------------------------------------------------
+  82          // SiLabs_Startup() Routine
+  83          // ----------------------------------------------------------------------------
+  84          // This function is called immediately after reset, before the initialization
+  85          // code is run in SILABS_STARTUP.A51 (which runs before main() ). This is a
+  86          // useful place to disable the watchdog timer, which is enable by default
+  87          // and may trigger before main() in some instances.
+  88          //-----------------------------------------------------------------------------
+  89          void SiLabs_Startup (void)
+  90          {
+  91   1        // Disable the watchdog here
+  92   1      }
+  93           
+  94          //-----------------------------------------------------------------------------
+  95          // Main Routine
+  96          //-----------------------------------------------------------------------------
+  97          //
+  98          // Main routine performs all configuration tasks, then waits for I2C
+  99          // communication.
+ 100          //
+ 101          //-----------------------------------------------------------------------------
+ 102          int main (void)
+ 103          {
+ 104   1              // Call hardware initialization routine
+ 105   1          enter_DefaultMode_from_RESET();
+ 106   1      
+ 107   1          DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
+ 108   1      
+ 109   1          LED1 = 1;
+ 110   1      
+ 111   1          IE_EA = 0;
+ 112   1          SFRPAGE = PG3_PAGE;
+ 113   1          I2C0CN0 &= ~I2C0CN0_BUSY__BMASK;            // Clear BUSY bit
+ 114   1          I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
+C51 COMPILER V9.60.0.0   EFM8BB3_I2C_SLAVE                                                 11/15/2020 15:24:06 PAGE 3   
+
+ 115   1          IE_EA = 1;
+ 116   1      
+ 117   1          while (1)
+ 118   1          {
+ 119   2      // $[Generated Run-time code]
+ 120   2      
+ 121   2              while (!dataReady);             // New I2C data received?
+ 122   2              dataReady = 0;
+ 123   2              LED1 = !LED1;
+ 124   2         }                             
+ 125   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

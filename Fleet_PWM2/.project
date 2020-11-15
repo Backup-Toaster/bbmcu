@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>FLEET_PWM</name>
+	<name>EFM8BB3_I2C_Slave_FIFO</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/SILABS_STARTUP.A51</name>
+			<type>1</type>
+			<locationURI>STUDIO_SDK_LOC/Device/shared/si8051Base/SILABS_STARTUP.A51</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
