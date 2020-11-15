@@ -130,16 +130,16 @@ PORTS_1_enter_DefaultMode_from_RESET (void)
   // $[P1MDOUT - Port 1 Output Mode]
   /***********************************************************************
    - P1.0 output is open-drain
-   - P1.1 output is open-drain
-   - P1.2 output is open-drain
-   - P1.3 output is open-drain
+   - P1.1 output is push-pull
+   - P1.2 output is push-pull
+   - P1.3 output is push-pull
    - P1.4 output is push-pull
    - P1.5 output is push-pull
    - P1.6 output is open-drain
    - P1.7 output is open-drain
    ***********************************************************************/
-  P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__OPEN_DRAIN
-      | P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__OPEN_DRAIN | P1MDOUT_B4__PUSH_PULL
+  P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__PUSH_PULL
+      | P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL | P1MDOUT_B4__PUSH_PULL
       | P1MDOUT_B5__PUSH_PULL | P1MDOUT_B6__OPEN_DRAIN | P1MDOUT_B7__OPEN_DRAIN;
   // [P1MDOUT - Port 1 Output Mode]$
 
@@ -149,17 +149,17 @@ PORTS_1_enter_DefaultMode_from_RESET (void)
   // $[P1SKIP - Port 1 Skip]
   /***********************************************************************
    - P1.0 pin is skipped by the crossbar
-   - P1.1 pin is skipped by the crossbar
-   - P1.2 pin is skipped by the crossbar
-   - P1.3 pin is skipped by the crossbar
+   - P1.1 pin is not skipped by the crossbar
+   - P1.2 pin is not skipped by the crossbar
+   - P1.3 pin is not skipped by the crossbar
    - P1.4 pin is not skipped by the crossbar
    - P1.5 pin is not skipped by the crossbar
-   - P1.6 pin is not skipped by the crossbar
+   - P1.6 pin is skipped by the crossbar
    - P1.7 pin is not skipped by the crossbar
    ***********************************************************************/
-  P1SKIP = P1SKIP_B0__SKIPPED | P1SKIP_B1__SKIPPED | P1SKIP_B2__SKIPPED
-      | P1SKIP_B3__SKIPPED | P1SKIP_B4__NOT_SKIPPED | P1SKIP_B5__NOT_SKIPPED
-      | P1SKIP_B6__NOT_SKIPPED | P1SKIP_B7__NOT_SKIPPED;
+  P1SKIP = P1SKIP_B0__SKIPPED | P1SKIP_B1__NOT_SKIPPED | P1SKIP_B2__NOT_SKIPPED
+      | P1SKIP_B3__NOT_SKIPPED | P1SKIP_B4__NOT_SKIPPED | P1SKIP_B5__NOT_SKIPPED
+      | P1SKIP_B6__SKIPPED | P1SKIP_B7__NOT_SKIPPED;
   // [P1SKIP - Port 1 Skip]$
 
   // $[P1MASK - Port 1 Mask]
@@ -345,16 +345,16 @@ PCACH_0_enter_DefaultMode_from_RESET (void)
 
   // $[PCA0CPL0 - PCA Channel 0 Capture Module Low Byte]
   /***********************************************************************
-   - PCA Channel 0 Capture Module Low Byte = 0x80
+   - PCA Channel 0 Capture Module Low Byte = 0x40
    ***********************************************************************/
-  PCA0CPL0 = (0x80 << PCA0CPL0_PCA0CPL0__SHIFT);
+  PCA0CPL0 = (0x40 << PCA0CPL0_PCA0CPL0__SHIFT);
   // [PCA0CPL0 - PCA Channel 0 Capture Module Low Byte]$
 
   // $[PCA0CPH0 - PCA Channel 0 Capture Module High Byte]
   /***********************************************************************
-   - PCA Channel 0 Capture Module High Byte = 0x80
+   - PCA Channel 0 Capture Module High Byte = 0x40
    ***********************************************************************/
-  PCA0CPH0 = (0x80 << PCA0CPH0_PCA0CPH0__SHIFT);
+  PCA0CPH0 = (0x40 << PCA0CPH0_PCA0CPH0__SHIFT);
   // [PCA0CPH0 - PCA Channel 0 Capture Module High Byte]$
 
   // $[Auto-reload]
@@ -394,16 +394,16 @@ PCACH_1_enter_DefaultMode_from_RESET (void)
 
   // $[PCA0CPL1 - PCA Channel 1 Capture Module Low Byte]
   /***********************************************************************
-   - PCA Channel 1 Capture Module Low Byte = 0x80
+   - PCA Channel 1 Capture Module Low Byte = 0x40
    ***********************************************************************/
-  PCA0CPL1 = (0x80 << PCA0CPL1_PCA0CPL1__SHIFT);
+  PCA0CPL1 = (0x40 << PCA0CPL1_PCA0CPL1__SHIFT);
   // [PCA0CPL1 - PCA Channel 1 Capture Module Low Byte]$
 
   // $[PCA0CPH1 - PCA Channel 1 Capture Module High Byte]
   /***********************************************************************
-   - PCA Channel 1 Capture Module High Byte = 0x80
+   - PCA Channel 1 Capture Module High Byte = 0x40
    ***********************************************************************/
-  PCA0CPH1 = (0x80 << PCA0CPH1_PCA0CPH1__SHIFT);
+  PCA0CPH1 = (0x40 << PCA0CPH1_PCA0CPH1__SHIFT);
   // [PCA0CPH1 - PCA Channel 1 Capture Module High Byte]$
 
   // $[Auto-reload]
@@ -440,16 +440,16 @@ PCACH_2_enter_DefaultMode_from_RESET (void)
 
   // $[PCA0CPL2 - PCA Channel 2 Capture Module Low Byte]
   /***********************************************************************
-   - PCA Channel 2 Capture Module Low Byte = 0x80
+   - PCA Channel 2 Capture Module Low Byte = 0x40
    ***********************************************************************/
-  PCA0CPL2 = (0x80 << PCA0CPL2_PCA0CPL2__SHIFT);
+  PCA0CPL2 = (0x40 << PCA0CPL2_PCA0CPL2__SHIFT);
   // [PCA0CPL2 - PCA Channel 2 Capture Module Low Byte]$
 
   // $[PCA0CPH2 - PCA Channel 2 Capture Module High Byte]
   /***********************************************************************
-   - PCA Channel 2 Capture Module High Byte = 0x80
+   - PCA Channel 2 Capture Module High Byte = 0x40
    ***********************************************************************/
-  PCA0CPH2 = (0x80 << PCA0CPH2_PCA0CPH2__SHIFT);
+  PCA0CPH2 = (0x40 << PCA0CPH2_PCA0CPH2__SHIFT);
   // [PCA0CPH2 - PCA Channel 2 Capture Module High Byte]$
 
   // $[Auto-reload]
