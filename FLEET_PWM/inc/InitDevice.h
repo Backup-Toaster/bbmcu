@@ -30,6 +30,8 @@ PBCFG_0_enter_DefaultMode_from_RESET (void);
 extern void
 CLOCK_0_enter_DefaultMode_from_RESET (void);
 extern void
+TIMER16_4_enter_DefaultMode_from_RESET (void);
+extern void
 PCA_0_enter_DefaultMode_from_RESET (void);
 extern void
 PCACH_0_enter_DefaultMode_from_RESET (void);
@@ -37,6 +39,10 @@ extern void
 PCACH_1_enter_DefaultMode_from_RESET (void);
 extern void
 PCACH_2_enter_DefaultMode_from_RESET (void);
+extern void
+I2CSLAVE_0_enter_DefaultMode_from_RESET (void);
+extern void
+INTERRUPT_0_enter_DefaultMode_from_RESET (void);
 // [Config(Per-Module Mode)Transition Prototypes]$
 
 #endif
